@@ -13,7 +13,7 @@ const roles = [
   "TEAMLEAD",
 ];
 
-const RegisterPage = () => {
+const RegisterPage = ({ title = "ISD Portal Register" }) => {
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -48,10 +48,17 @@ const RegisterPage = () => {
 
     try {
       await registerUser(formData);
-      setSuccess("Registration successful! Redirecting to login...");
+      setSuccess("User created successfully! Redirecting...");
+
       setTimeout(() => {
-        navigate("/login");
-      }, 2500);
+        if (role === "ADMIN") {
+          navigate("/admin/users"); // Admin: go to User Management page
+          //navigate("/");
+        } else {
+
+          navigate("/login"); // Others: go to login page
+        }
+      }, 1500);
     } catch (err) {
       setError(err.message || "Registration failed. Please try again.");
     }
@@ -63,7 +70,7 @@ const RegisterPage = () => {
         <div className="flex items-center justify-center mb-8">
           <Shield className="w-12 h-12 text-emerald-600" />
           <h2 className="ml-3 text-3xl font-extrabold text-emerald-700">
-            ISD Portal Register
+            {title}
           </h2>
         </div>
 
@@ -124,6 +131,7 @@ const RegisterPage = () => {
               type="password"
               id="password"
               name="password"
+              autoComplete="new-password"
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"

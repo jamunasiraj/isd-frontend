@@ -82,6 +82,7 @@ const LoginPage = () => {
             <input
               type={showPassword ? "text" : "password"}
               value={password}
+              autoComplete="new-password"
               onChange={(e) => setPassword(e.target.value)}
               className="mt-1 w-full px-4 py-3 border rounded-xl pr-10"
               required

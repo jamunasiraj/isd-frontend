@@ -15,6 +15,19 @@ import DashboardPage from "./pages/DashboardPage.jsx";
 import AdminDashboardPage from "./pages/AdminDashboardPage.jsx";
 import UserDashboardPage from "./pages/UserDashboardPage.jsx";
 import LogoutPage from "./pages/LogoutPage.jsx";
+// Ticket pages
+import TicketListPage from "./pages/TicketListPage.jsx";
+import CreateTicketPage from "./pages/CreateTicketPage.jsx";
+import TicketDetailPage from "./pages/TicketDetailPage.jsx";
+
+// User management pages (admin)
+import UserManagementPage from "./pages/UserManagementPage.jsx";
+import CreateUserPage from "./pages/CreateUserPage.jsx";
+import AdminUserPage from "./pages/AdminUserPage.jsx";
+import AssignTicketPage from "./pages/AssignTicketPage.jsx";
+import AuditLogPage from "./pages/AuditLogPage.jsx";
+
+
 
 function App() {
   return (
@@ -26,7 +39,8 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/register" element={<RegisterPage title="Create User" />}
+/>
             <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
             <Route path="/about" element={<AboutPage />} />
 
@@ -34,6 +48,21 @@ function App() {
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/dashboard/admin" element={<AdminDashboardPage />} />
             <Route path="/dashboard/user" element={<UserDashboardPage />} />
+
+             {/* Tickets */}
+            <Route path="/tickets" element={<TicketListPage />} />
+            <Route path="/tickets/create" element={<CreateTicketPage />} />
+            <Route path="/tickets/:ticketId" element={<TicketDetailPage />} />
+
+            {/* User Management (admin) */}
+            <Route path="/admin/users" element={<UserManagementPage />} />
+            <Route path="/admin/users/create" element={<CreateUserPage />} />
+            <Route path="/admin/users/:userId" element={<AdminUserPage />} />
+            <Route path="/tickets/:ticketId/assign" element={<AssignTicketPage />}/>
+            <Route path="/audit" element={<AuditLogPage />} />
+
+
+
 
             <Route path="/logout" element={<LogoutPage />} />
           </Routes>

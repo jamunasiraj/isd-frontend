@@ -9,11 +9,16 @@ const CreateTicketPage = () => {
   });
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+  try {
     await createTicket(form);
     alert("Ticket created successfully");
     setForm({ title: "", description: "", urgency: "LOW" });
-  };
+  } catch (error) {
+    alert("Failed to create ticket: " + error.message);
+    console.error("Create ticket error:", error);
+  }
+};
 
   return (
     <div className="p-6 max-w-xl">

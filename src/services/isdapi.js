@@ -2,21 +2,24 @@ const API_BASE_URL = "http://localhost:8080/api";
 
 /**
  * Generic API helper
- * Exported so it can be reused in ticketService, auditService, adminService, etc.
  */
 export const apiFetch = async (endpoint, options = {}) => {
   const url = `${API_BASE_URL}${endpoint}`;
+
+  // Get token from localStorage (or wherever you store it)
+  const token = localStorage.getItem("token");
+
   try {
     const response = await fetch(url, {
       ...options,
       headers: {
         "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...options.headers,
       },
     });
 
     if (!response.ok) {
-      // Try to extract backend error message
       let errorMessage = `Error: ${response.status}`;
       try {
         const errorData = await response.json();
@@ -24,12 +27,11 @@ export const apiFetch = async (endpoint, options = {}) => {
           errorMessage = errorData.message;
         }
       } catch {
-        // Ignore JSON parsing errors
+        // ignore JSON parse errors
       }
       throw new Error(errorMessage);
     }
 
-    // Handle empty responses (204 No Content)
     const text = await response.text();
     return text ? JSON.parse(text) : null;
   } catch (error) {
