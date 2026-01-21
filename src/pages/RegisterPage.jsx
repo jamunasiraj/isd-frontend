@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Shield } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { registerUser } from "../services/isdapi";
 
 const roles = [
@@ -15,6 +15,10 @@ const roles = [
 
 const RegisterPage = ({ title = "ISD Portal Register" }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Check if admin is creating a user
+  const isAdminCreating = location.state?.isAdminCreating || false;
 
   const [formData, setFormData] = useState({
     username: "",
@@ -40,7 +44,6 @@ const RegisterPage = ({ title = "ISD Portal Register" }) => {
 
     const { username, email, password, role } = formData;
 
-    // Basic validation
     if (!username || !email || !password || !role) {
       setError("Please fill in all fields.");
       return;
@@ -51,12 +54,12 @@ const RegisterPage = ({ title = "ISD Portal Register" }) => {
       setSuccess("User created successfully! Redirecting...");
 
       setTimeout(() => {
-        if (role === "ADMIN") {
-          navigate("/admin/users"); // Admin: go to User Management page
-          //navigate("/");
+        if (isAdminCreating) {
+          // Stay on user management page after admin adds user
+          navigate("/admin/users");
         } else {
-
-          navigate("/login"); // Others: go to login page
+          // Normal user registration goes to login page
+          navigate("/login");
         }
       }, 1500);
     } catch (err) {
@@ -81,6 +84,8 @@ const RegisterPage = ({ title = "ISD Portal Register" }) => {
           {success && (
             <div className="text-green-600 text-center font-semibold">{success}</div>
           )}
+
+          {/* The rest of your form inputs here (unchanged) */}
 
           <div>
             <label
@@ -171,15 +176,17 @@ const RegisterPage = ({ title = "ISD Portal Register" }) => {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-gray-600">
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-emerald-600 font-semibold hover:text-emerald-800"
-          >
-            Sign in here
-          </Link>
-        </p>
+        {!isAdminCreating && (
+          <p className="mt-6 text-center text-gray-600">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-emerald-600 font-semibold hover:text-emerald-800"
+            >
+              Sign in here
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   );

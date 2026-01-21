@@ -50,19 +50,17 @@ const NavBar = () => {
 
           {token && (
             <>
-              {/* DASHBOARD */}
-              {isAdmin && (
+              {isAdmin ? (
                 <NavLink to="/dashboard/admin" className={linkStyle}>
                   Dashboard
                 </NavLink>
-              )}
-              {role === "USER" && (
+              ) : (
                 <NavLink to="/dashboard/user" className={linkStyle}>
                   Dashboard
                 </NavLink>
               )}
 
-              {/* TICKETS (ALL ROLES) */}
+              {/* Tickets (All Roles) */}
               <NavLink to="/tickets" end className={linkStyle}>
                 Tickets
               </NavLink>
@@ -70,14 +68,14 @@ const NavBar = () => {
                 Create Ticket
               </NavLink>
 
-              {/* ASSIGN TICKET (ADMIN only) */}
+              {/* Assign Ticket (Admin Only) */}
               {isAdmin && (
                 <NavLink to="/tickets/assign" className={linkStyle}>
                   Assign Ticket
                 </NavLink>
               )}
 
-              {/* ADMIN */}
+              {/* Admin Links */}
               {isAdmin && (
                 <>
                   <NavLink to="/admin/users" className={linkStyle}>
@@ -89,7 +87,7 @@ const NavBar = () => {
                 </>
               )}
 
-              {/* AUDITOR */}
+              {/* Auditor Links */}
               {isAuditor && (
                 <NavLink to="/audit" className={linkStyle}>
                   Audit Logs
@@ -110,6 +108,7 @@ const NavBar = () => {
         <button
           onClick={() => setOpen(!open)}
           className="md:hidden text-emerald-700"
+          aria-label="Toggle menu"
         >
           {open ? <X /> : <Menu />}
         </button>
@@ -118,13 +117,21 @@ const NavBar = () => {
       {/* Mobile Menu */}
       {open && (
         <div className="md:hidden bg-white shadow-lg px-4 py-4 space-y-3">
-          <NavLink to="/" onClick={() => setOpen(false)} className={linkStyle}>Home</NavLink>
-          <NavLink to="/about" onClick={() => setOpen(false)} className={linkStyle}>About</NavLink>
+          <NavLink to="/" onClick={() => setOpen(false)} className={linkStyle}>
+            Home
+          </NavLink>
+          <NavLink to="/about" onClick={() => setOpen(false)} className={linkStyle}>
+            About
+          </NavLink>
 
           {!token && (
             <>
-              <NavLink to="/login" onClick={() => setOpen(false)} className={linkStyle}>Login</NavLink>
-              <NavLink to="/register" onClick={() => setOpen(false)} className={linkStyle}>Register</NavLink>
+              <NavLink to="/login" onClick={() => setOpen(false)} className={linkStyle}>
+                Login
+              </NavLink>
+              <NavLink to="/register" onClick={() => setOpen(false)} className={linkStyle}>
+                Register
+              </NavLink>
             </>
           )}
 
@@ -136,6 +143,16 @@ const NavBar = () => {
               <NavLink to="/tickets/create" onClick={() => setOpen(false)} className={linkStyle}>
                 Create Ticket
               </NavLink>
+
+              {isAdmin ? (
+                <NavLink to="/dashboard/admin" onClick={() => setOpen(false)} className={linkStyle}>
+                  Dashboard
+                </NavLink>
+              ) : (
+                <NavLink to="/dashboard/user" onClick={() => setOpen(false)} className={linkStyle}>
+                  Dashboard
+                </NavLink>
+              )}
 
               {isAdmin && (
                 <>

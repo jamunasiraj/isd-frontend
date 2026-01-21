@@ -4,7 +4,12 @@ import AuthContext from "./AuthContext.jsx";
 import { registerUser } from "../services/isdapi.js";
 
 const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null); 
+  // Lazy initialization from localStorage
+  const [user, setUser] = useState(() => {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -13,7 +18,11 @@ const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const result = await registerUser(data);
-      setUser(result.user || null); 
+      const loggedInUser = result.user || null;
+
+      setUser(loggedInUser);
+      localStorage.setItem("user", JSON.stringify(loggedInUser));
+
       setLoading(false);
       return result;
     } catch (err) {
@@ -23,14 +32,37 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  const login = (loginResponse) => {
+     const userData = {
+    username: loginResponse.username,
+    roles: loginResponse.roles,
+    token: loginResponse.accessToken,
+  };
+    setUser(userData);
+    localStorage.setItem("user", JSON.stringify(userData));
+  };
+
+ 
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+  };
+
   const value = {
     user,
     loading,
     error,
     register,
+    login,
+    logout,
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={value}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export default AuthProvider;
