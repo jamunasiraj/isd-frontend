@@ -85,7 +85,7 @@ const UserManagementPage = () => {
 
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">User Management</h2>
+      <h2 className="text-2xl font-bold mb-4  text-emerald-600">User Management</h2>
 
       <button
         onClick={() => navigate("/register", { state: { isAdminCreating: true } })}
