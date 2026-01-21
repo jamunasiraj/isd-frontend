@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Shield } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { registerUser } from "../services/isdapi";
 
 const roles = [
@@ -13,8 +13,12 @@ const roles = [
   "TEAMLEAD",
 ];
 
-const RegisterPage = () => {
+const RegisterPage = ({ title = "ISD Portal Register" }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Check if admin is creating a user
+  const isAdminCreating = location.state?.isAdminCreating || false;
 
   const [formData, setFormData] = useState({
     username: "",
@@ -40,7 +44,6 @@ const RegisterPage = () => {
 
     const { username, email, password, role } = formData;
 
-    // Basic validation
     if (!username || !email || !password || !role) {
       setError("Please fill in all fields.");
       return;
@@ -48,10 +51,17 @@ const RegisterPage = () => {
 
     try {
       await registerUser(formData);
-      setSuccess("Registration successful! Redirecting to login...");
+      setSuccess("User created successfully! Redirecting...");
+
       setTimeout(() => {
-        navigate("/login");
-      }, 2500);
+        if (isAdminCreating) {
+          // Stay on user management page after admin adds user
+          navigate("/admin/users");
+        } else {
+          // Normal user registration goes to login page
+          navigate("/login");
+        }
+      }, 1500);
     } catch (err) {
       setError(err.message || "Registration failed. Please try again.");
     }
@@ -63,7 +73,7 @@ const RegisterPage = () => {
         <div className="flex items-center justify-center mb-8">
           <Shield className="w-12 h-12 text-emerald-600" />
           <h2 className="ml-3 text-3xl font-extrabold text-emerald-700">
-            ISD Portal Register
+            {title}
           </h2>
         </div>
 
@@ -74,6 +84,8 @@ const RegisterPage = () => {
           {success && (
             <div className="text-green-600 text-center font-semibold">{success}</div>
           )}
+
+          {/* The rest of your form inputs here (unchanged) */}
 
           <div>
             <label
@@ -124,6 +136,7 @@ const RegisterPage = () => {
               type="password"
               id="password"
               name="password"
+              autoComplete="new-password"
               value={formData.password}
               onChange={handleChange}
               placeholder="••••••••"
@@ -163,15 +176,17 @@ const RegisterPage = () => {
           </button>
         </form>
 
-        <p className="mt-6 text-center text-gray-600">
-          Already have an account?{" "}
-          <Link
-            to="/login"
-            className="text-emerald-600 font-semibold hover:text-emerald-800"
-          >
-            Sign in here
-          </Link>
-        </p>
+        {!isAdminCreating && (
+          <p className="mt-6 text-center text-gray-600">
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="text-emerald-600 font-semibold hover:text-emerald-800"
+            >
+              Sign in here
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   );
