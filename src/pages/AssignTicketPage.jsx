@@ -6,7 +6,7 @@ const AssignTicketPage = () => {
   const [tickets, setTickets] = useState([]);
   const [users, setUsers] = useState([]);
 
-  // ✅ keep as STRING to avoid refresh issues
+  // keep as STRING to avoid refresh issues
   const [selectedTicketId, setSelectedTicketId] = useState("");
   const [selectedUserId, setSelectedUserId] = useState("");
 
