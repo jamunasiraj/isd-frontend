@@ -39,7 +39,8 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage title="Create User" />}
+            <Route path="/register" 
+  element={<RegisterPage title="Create User" />}
 />
             <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
             <Route path="/about" element={<AboutPage />} />
@@ -58,6 +59,7 @@ function App() {
             <Route path="/admin/users" element={<UserManagementPage />} />
             <Route path="/admin/users/create" element={<CreateUserPage />} />
             <Route path="/admin/users/:userId" element={<AdminUserPage />} />
+            <Route path="/tickets/assign" element={<AssignTicketPage />} />
             <Route path="/tickets/:ticketId/assign" element={<AssignTicketPage />}/>
             <Route path="/audit" element={<AuditLogPage />} />
 

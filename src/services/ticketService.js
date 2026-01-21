@@ -24,3 +24,7 @@ export const unassignTicket = (ticketId, userId) =>
   apiFetch(`/tickets/${ticketId}/assign/${userId}`, {
     method: "DELETE",
   });
+
+// GET users assigned to a ticket
+export const getTicketAssignees = (ticketId) =>
+  apiFetch(`/tickets/${ticketId}/assignees`);

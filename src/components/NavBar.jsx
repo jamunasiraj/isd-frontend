@@ -19,7 +19,7 @@ const NavBar = () => {
     navigate("/login");
   };
 
-  const isAdmin = ["ADMIN", "MANAGER", "TEAMLEAD"].includes(role);
+  const isAdmin = role === "ADMIN";
   const isAuditor = role === "AUDITOR";
 
   return (
@@ -70,7 +70,14 @@ const NavBar = () => {
                 Create Ticket
               </NavLink>
 
-              {/* ADMIN / MANAGER / TEAMLEAD */}
+              {/* ASSIGN TICKET (ADMIN only) */}
+              {isAdmin && (
+                <NavLink to="/tickets/assign" className={linkStyle}>
+                  Assign Ticket
+                </NavLink>
+              )}
+
+              {/* ADMIN */}
               {isAdmin && (
                 <>
                   <NavLink to="/admin/users" className={linkStyle}>
@@ -132,6 +139,9 @@ const NavBar = () => {
 
               {isAdmin && (
                 <>
+                  <NavLink to="/tickets/assign" onClick={() => setOpen(false)} className={linkStyle}>
+                    Assign Ticket
+                  </NavLink>
                   <NavLink to="/admin/users" onClick={() => setOpen(false)} className={linkStyle}>
                     Users
                   </NavLink>
