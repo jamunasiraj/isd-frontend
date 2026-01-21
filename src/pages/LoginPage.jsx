@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 import { Shield, Eye, EyeOff } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
+import AuthContext from "../contexts/AuthContext.jsx"; 
 
 const LoginPage = () => {
+  const { login } = useContext(AuthContext);  // add this
+
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -35,12 +39,18 @@ const LoginPage = () => {
 
       const data = await response.json();
 
+      login(data); 
+
       // Store token, username and first role
       localStorage.setItem("token", data.accessToken);
       localStorage.setItem("username", data.username);
       localStorage.setItem("role", data.roles[0]);
-
-      navigate("/dashboard");
+      // Redirect based on role
+    if (data.roles.includes("ADMIN")) {
+      navigate("/dashboard/admin");
+    } else {
+      navigate("/dashboard/user");
+    }
     } catch (err) {
       setError("Server error. Please try again later.");
       console.error(err);
@@ -114,6 +124,6 @@ const LoginPage = () => {
       </div>
     </div>
   );
-};
+};  
 
 export default LoginPage;

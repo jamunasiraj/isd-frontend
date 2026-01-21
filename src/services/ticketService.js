@@ -28,3 +28,16 @@ export const unassignTicket = (ticketId, userId) =>
 // GET users assigned to a ticket
 export const getTicketAssignees = (ticketId) =>
   apiFetch(`/tickets/${ticketId}/assignees`);
+
+//  ADDED: ADMIN update ticket
+export const updateTicket = (id, data) =>
+  apiFetch(`/tickets/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+
+//  ADDED: ADMIN delete ticket
+export const deleteTicket = (id) =>
+  apiFetch(`/tickets/${id}`, {
+    method: "DELETE",
+  });

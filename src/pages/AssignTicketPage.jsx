@@ -13,9 +13,7 @@ const AssignTicketPage = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
 
-  // ===============================
-  // LOAD DATA
-  // ===============================
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -36,9 +34,7 @@ const AssignTicketPage = () => {
     fetchData();
   }, []);
 
-  // ===============================
-  // ASSIGN
-  // ===============================
+ 
   const handleAssign = async () => {
     if (!selectedTicketId || !selectedUserId) {
       alert("Please select both ticket and user");
@@ -46,12 +42,11 @@ const AssignTicketPage = () => {
     }
 
     try {
-      // ✅ convert ONLY here
+      //  convert ONLY here
       await assignTicket(
         Number(selectedTicketId),
         Number(selectedUserId)
       );
-
       setMessage("User assigned to ticket successfully!");
     } catch (error) {
       alert("Failed to assign ticket: " + error.message);
@@ -62,7 +57,7 @@ const AssignTicketPage = () => {
 
   return (
     <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow">
-      <h2 className="text-xl font-bold mb-4">Assign Ticket to User</h2>
+      <h2 className="text-xl font-bold mb-4  text-emerald-600">Assign Ticket to User</h2>
 
       {/* ===================== */}
       {/* TICKET DROPDOWN */}
@@ -71,7 +66,10 @@ const AssignTicketPage = () => {
       <select
         className="w-full mb-4 p-2 border rounded"
         value={selectedTicketId}
-        onChange={(e) => setSelectedTicketId(e.target.value)}
+        // onChange={(e) => setSelectedTicketId(e.target.value) }
+         onChange={(e) => { setSelectedTicketId(e.target.value); setMessage("");          
+         }}
+        
       >
         <option value="">-- Select Ticket --</option>
 

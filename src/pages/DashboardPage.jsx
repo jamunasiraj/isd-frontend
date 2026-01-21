@@ -1,40 +1,28 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import AuthContext from "../contexts/AuthContext.jsx";
 
 const DashboardPage = () => {
   const navigate = useNavigate();
+  const { user } = useContext(AuthContext);
 
   useEffect(() => {
-    const role = localStorage.getItem("role");
+    const role = user?.roles?.[0]?.toUpperCase() || localStorage.getItem("role")?.toUpperCase() || "";
 
-    switch (role) {
-      case "ADMIN":
-        navigate("/dashboard/admin");
-        break;
-      case "USER":
-        navigate("/dashboard/user");
-        break;
-      case "SUPPORT_ENGINEER":
-        navigate("/dashboard/support-engineer");
-        break;
-      case "MANAGER":
-        navigate("/dashboard/manager");
-        break;
-      case "OBSERVER":
-        navigate("/dashboard/observer");
-        break;
-      case "AUDITOR":
-        navigate("/dashboard/auditor");
-        break;
-      case "TEAMLEAD":
-        navigate("/dashboard/teamlead");
-        break;
-      default:
-        navigate("/login");
+    if (role === "ADMIN") {
+      navigate("/dashboard/admin");
+    } else if (role) {
+      navigate("/dashboard/user");
+    } else {
+      navigate("/login");
     }
-  }, [navigate]);
+  }, [navigate, user]);
 
-  return null;
+  return (
+    <div className="flex justify-center items-center min-h-screen text-gray-600">
+      Redirecting to your dashboard...
+    </div>
+  );
 };
 
 export default DashboardPage;

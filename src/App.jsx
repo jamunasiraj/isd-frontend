@@ -13,19 +13,19 @@ import DashboardPage from "./pages/DashboardPage.jsx";
 
 // Role dashboards
 import AdminDashboardPage from "./pages/AdminDashboardPage.jsx";
-import UserDashboardPage from "./pages/UserDashboardPage.jsx";
+import UserDashboardPage from "./pages/UserDashboardpage.jsx";
 import LogoutPage from "./pages/LogoutPage.jsx";
 // Ticket pages
 import TicketListPage from "./pages/TicketListPage.jsx";
 import CreateTicketPage from "./pages/CreateTicketPage.jsx";
-import TicketDetailPage from "./pages/TicketDetailPage.jsx";
+import TicketDetailPage from "./pages/TicketEditPage.jsx";
 
 // User management pages (admin)
 import UserManagementPage from "./pages/UserManagementPage.jsx";
-import CreateUserPage from "./pages/CreateUserPage.jsx";
 import AdminUserPage from "./pages/AdminUserPage.jsx";
 import AssignTicketPage from "./pages/AssignTicketPage.jsx";
 import AuditLogPage from "./pages/AuditLogPage.jsx";
+import Footer from "./components/Footer.jsx";
 
 
 
@@ -39,8 +39,7 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" 
-  element={<RegisterPage title="Create User" />}
+            <Route path="/register" element={<RegisterPage title="ISD Portal Register" />}
 />
             <Route path="/forgotpassword" element={<ForgotPasswordPage />} />
             <Route path="/about" element={<AboutPage />} />
@@ -52,23 +51,26 @@ function App() {
 
              {/* Tickets */}
             <Route path="/tickets" element={<TicketListPage />} />
-            <Route path="/tickets/create" element={<CreateTicketPage />} />
-            <Route path="/tickets/:ticketId" element={<TicketDetailPage />} />
+            <Route path="/tickets/create" element= {<CreateTicketPage/>}/>
+            
 
             {/* User Management (admin) */}
             <Route path="/admin/users" element={<UserManagementPage />} />
-            <Route path="/admin/users/create" element={<CreateUserPage />} />
+            <Route path="/admin/users/create" element={<RegisterPage title="Create User" />} />
             <Route path="/admin/users/:userId" element={<AdminUserPage />} />
             <Route path="/tickets/assign" element={<AssignTicketPage />} />
             <Route path="/tickets/:ticketId/assign" element={<AssignTicketPage />}/>
             <Route path="/audit" element={<AuditLogPage />} />
+            
 
 
 
 
-            <Route path="/logout" element={<LogoutPage />} />
+          <Route path="/logout" element={<LogoutPage />} />
           </Routes>
+          
         </div>
+        <Footer />
       </BrowserRouter>
     </AuthProvider>
   );
