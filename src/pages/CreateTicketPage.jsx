@@ -15,23 +15,30 @@ const CreateTicketPage = () => {
   const [sentimentScore, setSentimentScore] = useState(null); // << Track sentiment score for display
 
   // << Modified description handler to analyze sentiment live and adjust urgency
-  const handleDescriptionChange = (e) => {
-    const desc = e.target.value;
-    setForm((prev) => ({ ...prev, description: desc }));
+ const handleDescriptionChange = (e) => {
+  const desc = e.target.value;
 
-    const result = sentiment.analyze(desc);
-    setSentimentScore(result.score);
+  const result = sentiment.analyze(desc);
+  setSentimentScore(result.score);
+
+  setForm((prev) => {
+    let newUrgency = prev.urgency;
 
     if (result.score < -2) {
-      // Strong negative sentiment detected → automatically set urgency HIGH
-      setForm((prev) => ({ ...prev, urgency: "HIGH" }));
-    } else {
-      // If previously forced HIGH but sentiment improves, reset urgency to LOW
-      if (form.urgency === "HIGH") {
-        setForm((prev) => ({ ...prev, urgency: "LOW" }));
-      }
+      newUrgency = "HIGH"; // force HIGH if very negative
+    } else if (prev.urgency === "HIGH") {
+      // reset to LOW if previously HIGH and sentiment improved
+      newUrgency = "LOW";
     }
-  };
+
+    return {
+      ...prev,
+      description: desc,
+      urgency: newUrgency,
+    };
+  });
+};
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
