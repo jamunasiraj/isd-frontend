@@ -1,10 +1,19 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AuthContext from "../contexts/AuthContext.jsx";
-import RoleUi from "../components/RoleUi.jsx"; // Import RoleUi
+import RoleUi from "../components/RoleUi.jsx";
+import AppButton from "../components/ui/AppButton.jsx";
 
 const AdminDashboardPage = () => {
   const { user } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
+
+  const buttonBaseClasses =
+    "bg-white p-6 rounded-xl border border-gray-300 hover:border-emerald-500 shadow-sm hover:shadow-lg hover:scale-[1.03] transition transform duration-300 ease-in-out block text-left";
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -12,16 +21,14 @@ const AdminDashboardPage = () => {
         👋 Welcome, {user?.username || "Admin"}
       </h1>
 
-      {/* Show Role Badge */}
       <div className="mb-6">
-        <RoleUi /> {/* RoleUi reads role from localStorage */}
+        <RoleUi />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* User Management */}
-        <Link
-          to="/admin/users"
-          className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition block"
+        <AppButton
+          className={buttonBaseClasses}
+          onClick={() => handleNavigate("/admin/users")}
         >
           <h2 className="text-xl font-semibold mb-2">User Management</h2>
           <p className="text-gray-600">Manage all users, roles, and permissions.</p>
@@ -32,12 +39,11 @@ const AdminDashboardPage = () => {
               className="mx-auto h-16 w-16"
             />
           </div>
-        </Link>
+        </AppButton>
 
-        {/* Ticket Overview */}
-        <Link
-          to="/tickets"
-          className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition block"
+        <AppButton
+          className={buttonBaseClasses}
+          onClick={() => handleNavigate("/tickets")}
         >
           <h2 className="text-xl font-semibold mb-2">Tickets Overview</h2>
           <p className="text-gray-600">View all tickets and their statuses.</p>
@@ -48,12 +54,11 @@ const AdminDashboardPage = () => {
               className="mx-auto h-16 w-16"
             />
           </div>
-        </Link>
+        </AppButton>
 
-        {/* Audit Logs */}
-        <Link
-          to="/audit"
-          className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition block"
+        <AppButton
+          className={buttonBaseClasses}
+          onClick={() => handleNavigate("/audit")}
         >
           <h2 className="text-xl font-semibold mb-2">Audit Logs</h2>
           <p className="text-gray-600">Track all system and user activities.</p>
@@ -64,12 +69,12 @@ const AdminDashboardPage = () => {
               className="mx-auto h-16 w-16"
             />
           </div>
-        </Link>
+        </AppButton>
       </div>
 
       {/* Extra Section - News, Awards, Facts */}
       <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+        <div className="bg-white p-6 rounded-xl border border-gray-300 shadow-sm hover:shadow-lg transition">
           <h2 className="text-xl font-semibold mb-2">Latest News</h2>
           <p className="text-gray-600">Stay updated with recent announcements.</p>
           <div className="mt-4 text-center">
@@ -81,7 +86,7 @@ const AdminDashboardPage = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+        <div className="bg-white p-6 rounded-xl border border-gray-300 shadow-sm hover:shadow-lg transition">
           <h2 className="text-xl font-semibold mb-2">Awards & Recognition</h2>
           <p className="text-gray-600">Celebrating our team's achievements.</p>
           <div className="mt-4 text-center">
@@ -93,7 +98,7 @@ const AdminDashboardPage = () => {
           </div>
         </div>
 
-        <div className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition">
+        <div className="bg-white p-6 rounded-xl border border-gray-300 shadow-sm hover:shadow-lg transition">
           <h2 className="text-xl font-semibold mb-2">Did You Know?</h2>
           <p className="text-gray-600">Interesting facts to keep you motivated.</p>
           <div className="mt-4 text-center">
