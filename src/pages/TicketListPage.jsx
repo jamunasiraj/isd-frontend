@@ -18,25 +18,26 @@ const TicketListPage = () => {
   const [editedDescription, setEditedDescription] = useState("");
   const [editedStatus, setEditedStatus] = useState("");
 
+  // Updated: Added search/filter states
   const [searchText, setSearchText] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
   const [urgencyFilter, setUrgencyFilter] = useState("");
 
-  
+  //remark
+  const [editedRemark, setEditedRemark] = useState("");
+
 
   useEffect(() => {
     getTickets()
       .then((data) => {
         const sorted = (data || []).slice().sort((a, b) => a.id - b.id);
         setTickets(sorted);
-        
       })
       .finally(() => setLoading(false));
   }, []);
 
   // Normalize username
   const userNameLower = user?.username?.toLowerCase();
-  
 
   /**
    * EDIT PERMISSION LOGIC
@@ -52,14 +53,11 @@ const TicketListPage = () => {
       (a) => a.username?.toLowerCase() === userNameLower
     );
 
-
     return isAdmin || isAssignee;
   };
 
-  // FILTERING (UNCHANGED)
+  // FILTERING (with search/filter state)
   const filteredTickets = tickets.filter((t) => {
-    
-
     const matchesText =
       t.title.toLowerCase().includes(searchText.toLowerCase()) ||
       t.description.toLowerCase().includes(searchText.toLowerCase());
@@ -92,17 +90,20 @@ const TicketListPage = () => {
     setEditTicketId(ticket.id);
     setEditedDescription(ticket.description);
     setEditedStatus(ticket.status);
+    setEditedRemark(ticket.remark || "");
   };
 
   const handleSaveClick = async (ticketId) => {
     try {
       const originalTicket = tickets.find((t) => t.id === ticketId);
+      const canEditRemark =role === "ADMIN" || role === "SUPPORT_ENGINEER";
 
       const updates = {
         title: originalTicket.title,
         description: editedDescription,
         status: editedStatus,
         urgency: originalTicket.urgency,
+        ...(canEditRemark && { remark: editedRemark }),
       };
 
       const updatedTicket = await updateTicket(ticketId, updates);
@@ -111,7 +112,7 @@ const TicketListPage = () => {
         prev.map((t) => (t.id === ticketId ? updatedTicket : t))
       );
 
-      setEditTicketId(null);      
+      setEditTicketId(null);
     } catch (error) {
       console.error("Failed to update ticket:", error);
       alert("Failed to save changes");
@@ -128,6 +129,38 @@ const TicketListPage = () => {
         Ticket List
       </h1>
 
+      {/* Updated: Added Search and Filter UI */}
+      <div className="mb-6 grid grid-cols-1 md:grid-cols-3 gap-4">
+        <input
+          type="text"
+          placeholder="Search title or description"
+          value={searchText}
+          onChange={(e) => setSearchText(e.target.value)}
+          className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
+        />
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
+        >
+          <option value="">All Status</option>
+          <option value="OPEN">OPEN</option>
+          <option value="IN_PROGRESS">IN_PROGRESS</option>
+          <option value="RESOLVED">RESOLVED</option>
+          <option value="CLOSED">CLOSED</option>
+        </select>
+        <select
+          value={urgencyFilter}
+          onChange={(e) => setUrgencyFilter(e.target.value)}
+          className="border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition"
+        >
+          <option value="">All Urgency</option>
+          <option value="LOW">LOW</option>
+          <option value="MEDIUM">MEDIUM</option>
+          <option value="HIGH">HIGH</option>
+        </select>
+      </div>
+
       <table className="min-w-full border border-gray-300">
         <thead>
           <tr className="bg-gray-100">
@@ -136,6 +169,9 @@ const TicketListPage = () => {
             <th className="border px-4 py-2">Description</th>
             <th className="border px-4 py-2">Status</th>
             <th className="border px-4 py-2">Urgency</th>
+            {(role === "ADMIN" || role === "SUPPORT_ENGINEER") && (
+  <th className="border px-4 py-2">Remark</th>
+)}
             <th className="border px-4 py-2">Owner</th>
             <th className="border px-4 py-2">Assignees</th>
             <th className="border px-4 py-2">Actions</th>
@@ -177,14 +213,29 @@ const TicketListPage = () => {
               </td>
 
               <td className="border px-4 py-2">{t.urgency}</td>
+              {(role === "ADMIN" || role === "SUPPORT_ENGINEER") && (
+  <td className="border px-4 py-2">
+    {editTicketId === t.id ? (
+      <input
+        value={editedRemark}
+        onChange={(e) => setEditedRemark(e.target.value)}
+        className="border px-2 py-1 w-full"
+      />
+    ) : (
+      t.remark || "-"
+    )}
+  </td>
+)}
+
               <td className="border px-4 py-2">{t.owner?.username}</td>
+              
               <td className="border px-4 py-2">
                 {t.assignees?.map((a) => a.username).join(", ") || "-"}
               </td>
 
               <td className="border px-4 py-2">
-                {canEditTicket(t) && (
-                  editTicketId === t.id ? (
+                {canEditTicket(t) &&
+                  (editTicketId === t.id ? (
                     <button
                       onClick={() => handleSaveClick(t.id)}
                       className="bg-green-600 text-white px-3 py-1 rounded"
@@ -198,8 +249,7 @@ const TicketListPage = () => {
                     >
                       Edit
                     </button>
-                  )
-                )}
+                  ))}
               </td>
             </tr>
           ))}
@@ -210,7 +260,9 @@ const TicketListPage = () => {
         <button onClick={goPrev} disabled={page === 1}>
           Prev
         </button>
-        <span>{page} / {totalPages}</span>
+        <span>
+          {page} / {totalPages}
+        </span>
         <button onClick={goNext} disabled={page === totalPages}>
           Next
         </button>
